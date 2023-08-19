@@ -101,7 +101,7 @@ async def friends_page():
     )
 
     if friends:
-        for _, friend in enumerate(friends):
+        for i, friend in enumerate(friends):
             # If friend is bot (UID 1).
             if friend["user2"] == 1:
                 bot_info = await glob.db.fetch(
@@ -109,25 +109,25 @@ async def friends_page():
                     'WHERE id = 1'
                 )
 
-                friends[_]['name'] = bot_info['name']
-                friends[_]['country'] = bot_info['country']
-                friends[_]['status'] = True
-                friends[_]['customisation'] = utils.has_profile_customizations(friend["user2"])
+                friends[i]['name'] = bot_info['name']
+                friends[i]['country'] = bot_info['country']
+                friends[i]['status'] = True
+                friends[i]['customisation'] = utils.has_profile_customizations(friend["user2"])
 
                 continue
 
-            friend_status = get(f'https://api.{glob.config.domain}/v1/get_player_status?id={friend["user2"]}')
+            friend_status = get(f'https://api.{glob.config.domain}/v1/get_player_status?id={friend["user2"]}', verify=False)
             friend_status = json.loads(friend_status.content)
-            friends[_]['status'] = friend_status['player_status']['online']
+            friends[i]['status'] = friend_status['player_status']['online']
             if not friend_status['player_status']['online']:
-                friends[_]['last_seen'] = timeago.format(friend_status['player_status']['last_seen'], time.time())
+                friends[i]['last_seen'] = timeago.format(friend_status['player_status']['last_seen'], time.time())
 
-            friend_data = get(f'https://api.{glob.config.domain}/v1/get_player_info?id={friend["user2"]}&scope=info')
+            friend_data = get(f'https://api.{glob.config.domain}/v1/get_player_info?id={friend["user2"]}&scope=info', verify=False)
             friend_data = json.loads(friend_data.content)
-            friends[_]['name'] = friend_data['player']['info']['name']
-            friends[_]['country'] = friend_data['player']['info']['country']
+            friends[i]['name'] = friend_data['player']['info']['name']
+            friends[i]['country'] = friend_data['player']['info']['country']
 
-            friends[_]['customisation'] = utils.has_profile_customizations(friend["user2"])
+            friends[i]['customisation'] = utils.has_profile_customizations(friend["user2"])
 
     return await render_template(
         'friends.html',
