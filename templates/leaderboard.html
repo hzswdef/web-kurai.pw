@@ -94,8 +94,8 @@
                                 </a>
                             </td>
                             <td class="column-player-pp" v-if="sort == 'pp' || sort == 'rscore'">
-                                <% (sort=='pp' ? user.pp+'pp' : "" ) %>
-                                    <% (sort=='rscore' ? scoreFormat(user.rscore) : "" ) %>
+                                <% addCommas((sort=='pp' ? user.pp+'pp' : "" )) %>
+                                    <% addCommas((sort=='rscore' ? scoreFormat(user.rscore) : "" )) %>
                             </td>
                             <td class="column-player-accuracy">
                                 <% user.acc.toFixed(2) %>%
